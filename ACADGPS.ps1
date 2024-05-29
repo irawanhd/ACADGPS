@@ -7,13 +7,18 @@ function Create-ADGroupAndAddComputers {
         [string]$csvPath
     )
 
-    # Load the CSV file
-    $csvData = Import-Csv -Path $csvPath -Delimiter ';'
-
     do {
+        # Load the CSV file
+        $csvData = Import-Csv -Path $csvPath -Delimiter ';'
+
         # Display the available hostname patterns for user selection with numbers
         Write-Output "Available hostname patterns:"
-        $csvData | ForEach-Object { $_ | Add-Member -MemberType NoteProperty -Name Number -Value ($csvData.IndexOf($_)); $_ } | Select-Object Number, Name, 'Hostname Contains' | Format-Table -AutoSize
+        $csvData | ForEach-Object {
+            if (-not $_.PSObject.Properties["Number"]) {
+                $_ | Add-Member -MemberType NoteProperty -Name Number -Value ($csvData.IndexOf($_))
+            }
+            $_
+        } | Select-Object Number, Name, 'Hostname Contains' | Format-Table -AutoSize
 
         # Prompt the user to select the hostname pattern by number
         $selectedNumber = Read-Host "Enter the number corresponding to the hostname pattern"
