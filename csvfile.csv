@@ -1,0 +1,3 @@
+﻿Name;DistinguishedName;Hostname Contains
+example1;OU=example1,OU=example,DC=example,DC=com;ABC000
+example2;OU=example2,OU=example,DC=example,DC=com;ABC001
